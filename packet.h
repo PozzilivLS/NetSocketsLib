@@ -1,8 +1,9 @@
 ﻿#ifndef PACKET_H
 #define PACKET_H
 
-#include <vector>
+#include <iostream>
 #include <stdexcept>
+#include <vector>
 
 #include "configuration.h"
 
@@ -17,6 +18,10 @@ class Packet {
   const char *getData() const { return data_.data(); }
   size_t getDataSize() const { return data_.size(); }
 
+  Packet &operator<<(const char *value);
+
+  Packet &operator>>(char *value);
+
   template <typename T>
   typename std::enable_if<std::is_integral<T>::value, Packet &>::type
   operator<<(T value);
@@ -29,12 +34,12 @@ class Packet {
 
  private:
   template <typename T>
-  typename std::enable_if<std::is_integral<T>::value, T>::type
-  hostToNetwork(T value);
+  typename std::enable_if<std::is_integral<T>::value, T>::type hostToNetwork(
+      T value);
 
   template <typename T>
-  typename std::enable_if<std::is_integral<T>::value, T>::type
-  networkToHost(T value);
+  typename std::enable_if<std::is_integral<T>::value, T>::type networkToHost(
+      T value);
 
   std::vector<char> data_;
   size_t readPos_ = 0;
@@ -43,7 +48,7 @@ class Packet {
 template <typename T>
 inline typename std::enable_if<std::is_integral<T>::value, Packet &>::type
 Packet::operator<<(T value) {
-  T netValue = hostToNetwork(value);
+  T netValue = hostToNetwork<T>(value);
 
   const char *bytes = reinterpret_cast<const char *>(&netValue);
   data_.insert(data_.end(), bytes, bytes + sizeof(netValue));
@@ -55,13 +60,16 @@ template <typename T>
 inline typename std::enable_if<std::is_integral<T>::value, Packet &>::type
 Packet::operator>>(T &value) {
   T netValue;
+  std::cout << readPos_ << " - " << data_.size()
+            << " netSize: " << sizeof(netValue) << " valSize: " << sizeof(value)
+            << std::endl;
   if (readPos_ + sizeof(netValue) > data_.size()) {
     throw std::runtime_error("Packet read overflow");
   }
   std::memcpy(&netValue, data_.data() + readPos_, sizeof(netValue));
   readPos_ += sizeof(netValue);
 
-  value = networkToHost(netValue);
+  value = networkToHost<T>(netValue);
 
   return *this;
 }
@@ -113,7 +121,7 @@ inline uint64_t Packet::networkToHost<uint64_t>(uint64_t value) {
 #endif
 }
 
-//common
+// common
 template <typename T>
 inline typename std::enable_if<std::is_integral<T>::value, T>::type
 Packet::hostToNetwork(T value) {

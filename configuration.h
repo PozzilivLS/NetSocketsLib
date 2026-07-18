@@ -25,12 +25,30 @@
 #include <fcntl.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
+#include <unistd.h>
+#include <arpa/inet.h>
 
 #endif
 #include <cstdint>
+#include <cstring>
 
 #if PLATFORM == PLATFORM_WINDOWS
 #pragma comment(lib, "wsock32.lib")
 #endif
+
+inline bool initializeSockets() {
+#if PLATFORM == PLATFORM_WINDOWS
+  WSADATA WsaData;
+  return WSAStartup(MAKEWORD(2, 2), &WsaData) == NO_ERROR;
+#else
+  return true;
+#endif
+}
+
+inline void shutdownSockets() {
+#if PLATFORM == PLATFORM_WINDOWS
+  WSACleanup();
+#endif
+}
 
 #endif  // !CONFIGURATION_H

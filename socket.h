@@ -10,11 +10,15 @@ class Socket {
   Socket();
   ~Socket();
 
-  bool sendTo(Address &addr, Packet &msg);
-  bool recvFrom(Address &addr, Packet &buffer);
+  bool create();
+  void close();
+
+  int sendTo(const Address &addr, const Packet &msg) const;
+  int recvFrom(Address &addr, Packet &buffer);
 
   bool setNonBlockingMode();
 
+  int bindTo(const Address &addr);
  private:
   int socket_ = 0;
 };
