@@ -30,6 +30,11 @@ if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET packetslib PROPERTY CXX_STANDARD 20)
 endif()
 
+target_include_directories(packetslib PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<INSTALL_INTERFACE:include>
+)
+
 install(TARGETS packetslib
   CONFIGURATIONS Debug Release RelWithDebInfo MinSizeRel
   DESTINATION lib
@@ -37,4 +42,4 @@ install(TARGETS packetslib
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
 )
-install(FILES Packet.h DESTINATION include)
+install(FILES packet.h socket.h address.h configuration.h DESTINATION include)
