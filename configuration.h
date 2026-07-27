@@ -51,7 +51,7 @@ inline void shutdownSockets() {
 #endif
 }
 
-inline int getLastError() {
+inline int getLastSocketError() {
 #if PLATFORM == PLATFORM_WINDOWS
   return WSAGetLastError();
 #else
