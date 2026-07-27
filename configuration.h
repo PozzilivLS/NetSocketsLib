@@ -51,4 +51,12 @@ inline void shutdownSockets() {
 #endif
 }
 
+inline int getLastError() {
+#if PLATFORM == PLATFORM_WINDOWS
+  return WSAGetLastError();
+#else
+  return errno;
+#endif
+}
+
 #endif  // !CONFIGURATION_H
