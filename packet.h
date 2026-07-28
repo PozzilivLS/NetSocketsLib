@@ -60,9 +60,9 @@ template <typename T>
 inline typename std::enable_if<std::is_integral<T>::value, Packet &>::type
 Packet::operator>>(T &value) {
   T netValue;
-  std::cout << readPos_ << " - " << data_.size()
+  /*std::cout << readPos_ << " - " << data_.size()
             << " netSize: " << sizeof(netValue) << " valSize: " << sizeof(value)
-            << std::endl;
+            << std::endl;*/
   if (readPos_ + sizeof(netValue) > data_.size()) {
     throw std::runtime_error("Packet read overflow");
   }
