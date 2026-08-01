@@ -36,6 +36,25 @@ Packet &Packet::operator>>(char *value) {
   return *this;
 }
 
+Packet &Packet::operator<<(const std::string &value) {
+  uint32_t valueSize = static_cast<uint32_t>(value.size());
+  *this << valueSize;
+  data_.insert(data_.end(), value.begin(), value.end());
+  return *this;
+}
+
+Packet &Packet::operator>>(std::string &value) {
+  uint32_t valueSize = 0;
+  *this >> valueSize;
+  if (valueSize < 0 ||
+      readPos_ + static_cast<size_t>(valueSize) > data_.size()) {
+    throw std::runtime_error("Packet read overflow");
+  }
+  value.assign(data_.data() + readPos_, valueSize);
+  readPos_ += valueSize;
+  return *this;
+}
+
 //Packet &pck::Packet::operator<<(char value) {
 //  data_.insert(data_.end(), value);
 //  return *this;

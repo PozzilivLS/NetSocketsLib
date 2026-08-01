@@ -21,6 +21,9 @@ class Packet {
   Packet &operator<<(const char *value);
   Packet &operator>>(char *value);
 
+  Packet &operator<<(const std::string &value);
+  Packet &operator>>(std::string &value);
+
   template <typename T>
   typename std::enable_if<std::is_integral<T>::value, Packet &>::type
   operator<<(T value);
