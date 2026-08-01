@@ -19,7 +19,6 @@ class Packet {
   size_t getDataSize() const { return data_.size(); }
 
   Packet &operator<<(const char *value);
-
   Packet &operator>>(char *value);
 
   template <typename T>
