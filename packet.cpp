@@ -14,7 +14,7 @@ void Packet::insertBack(char *buffer, size_t bufferSize) {
 }
 
 Packet &Packet::operator<<(const char *value) {
-  uint32_t valueSize = htons(static_cast<uint32_t>(std::strlen(value)) + 1);
+  uint32_t valueSize = static_cast<uint32_t>(std::strlen(value)) + 1;
   *this << valueSize;
 
   data_.insert(data_.end(), value, value + valueSize);
@@ -25,7 +25,6 @@ Packet &Packet::operator<<(const char *value) {
 Packet &Packet::operator>>(char *value) {
   uint32_t valueSize = 0;
   *this >> valueSize;
-  valueSize = ntohs(valueSize);
 
   if (readPos_ + valueSize > data_.size()) {
     throw std::runtime_error("Packet read overflow");
