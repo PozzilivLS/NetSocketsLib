@@ -1,8 +1,8 @@
 ﻿#ifndef SOCKET_H
 #define SOCKET_H
 
-#include "configuration.h"
 #include "address.h"
+#include "configuration.h"
 #include "packet.h"
 
 class Socket {
@@ -19,6 +19,9 @@ class Socket {
   bool setNonBlockingMode();
 
   int bindTo(const Address &addr);
+
+  const int &getSocket() const { return socket_; }
+
  private:
   int socket_ = 0;
 };
