@@ -9,19 +9,12 @@ Socket::Socket() {}
 Socket::~Socket() { close(); }
 
 bool Socket::create() {
-  struct sockaddr_in sin;
-  int addrlen = sizeof(sin);
-  sin.sin_family = AF_INET;
-  sin.sin_addr.s_addr = INADDR_ANY;
-  sin.sin_port = 0;
-
   socket_ = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
   if (socket_ <= 0) {
     printf("failed to create socket\n");
     return false;
   }
-  bind(socket_, (struct sockaddr *)&sin, sizeof(sin));
 
   return true;
 }
