@@ -26,7 +26,7 @@ class Packet {
 
   template <typename T>
   typename std::enable_if<std::is_integral<T>::value, Packet &>::type
-  operator<<(T value);
+  operator<<(const T &value);
 
   template <typename T>
   typename std::enable_if<std::is_integral<T>::value, Packet &>::type
@@ -49,7 +49,7 @@ class Packet {
 
 template <typename T>
 inline typename std::enable_if<std::is_integral<T>::value, Packet &>::type
-Packet::operator<<(T value) {
+Packet::operator<<(const T &value) {
   T netValue = hostToNetwork<T>(value);
 
   const char *bytes = reinterpret_cast<const char *>(&netValue);
